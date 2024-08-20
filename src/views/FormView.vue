@@ -20,7 +20,6 @@ export default Vue.extend({
   },
   created() {
     // TODO: Load user data here and set userName
-    console.log("AddressInput component created");
   },
 });
 </script>
