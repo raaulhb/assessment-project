@@ -32,7 +32,7 @@ export default Vue.extend({
           `https://api.postcodes.io/postcodes/${this.postcode}/autocomplete`
         );
         // Log the full response
-        console.log("API Response:", response.result);
+        console.log("API Response:", response);
 
         // Check if response.data.result is an array
         if (Array.isArray(response.data.result)) {
