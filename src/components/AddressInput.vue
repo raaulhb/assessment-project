@@ -12,6 +12,11 @@ export default Vue.extend({
   },
   data() {
     return {
+      addresses: [] as {
+        addressLine1: string;
+        postcode: string;
+        dateMovedIn: string;
+      }[], // Array to hold all address entries
       addressLine1: "",
       postcode: "",
       dateMovedIn: "",
@@ -55,13 +60,57 @@ export default Vue.extend({
       console.log("Selected postcode:", postcode);
       this.suggestions = []; // Clear suggestions after selection
     },
+    addAddress() {
+      if (this.addressLine1 && this.postcode && this.dateMovedIn) {
+        this.addresses.push({
+          addressLine1: this.addressLine1,
+          postcode: this.postcode,
+          dateMovedIn: this.dateMovedIn,
+        });
+        // Clear the current input fields
+        this.addressLine1 = "";
+        this.postcode = "";
+        this.dateMovedIn = "";
+      } else {
+        alert("Please fill out all fields before adding an address.");
+      }
+    },
+    removeAddress(index: number) {
+      this.addresses.splice(index, 1);
+    },
+    calculateAddressCoverage(): boolean {
+      if (this.addresses.length === 0) return false;
+
+      const threeYearsAgo = new Date();
+      threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+
+      // Sort addresses by dateMovedIn in descending order
+      const sortedAddresses = this.addresses
+        .map((addr) => new Date(addr.dateMovedIn))
+        .sort((a, b) => b.getTime() - a.getTime());
+
+      const earliestDate = sortedAddresses[sortedAddresses.length - 1];
+
+      return earliestDate <= threeYearsAgo;
+    },
+    submitForm() {
+      if (this.calculateAddressCoverage()) {
+        // Proceed with form submission
+        console.log("Form is valid. Proceeding with submission.");
+        // Implement form submission logic here
+      } else {
+        alert(
+          "Please ensure you have provided address history covering at least 3 years."
+        );
+      }
+    },
   },
 });
 </script>
 
 <template>
   <div class="address-input mb-4">
-    <!-- Address Line 1 -->
+    <!-- Address Entry -->
     <!-- prettier-ignore -->
     <b-form-group label="Address Line 1">
       <b-form-input
@@ -70,7 +119,6 @@ export default Vue.extend({
       />
     </b-form-group>
 
-    <!-- Postcode with Autocomplete -->
     <b-form-group label="Postcode">
       <b-form-input
         v-model="postcode"
@@ -94,14 +142,44 @@ export default Vue.extend({
       </b-list-group>
     </b-form-group>
 
-    <!-- Date Moved In -->
-    <!-- prettier-ignore -->
     <b-form-group label="Date Moved In">
+      <!-- prettier-ignore -->
       <b-form-datepicker
         v-model="dateMovedIn"
         required
       />
     </b-form-group>
+
+    <b-button @click="addAddress">Add Address</b-button>
+
+    <!-- Display added addresses with Remove button -->
+    <div v-if="addresses.length">
+      <h5>Address History</h5>
+      <ul>
+        <!-- prettier-ignore -->
+        <li
+          v-for="(address, index) in addresses"
+          :key="index"
+        >
+          {{ address.addressLine1 }}, {{ address.postcode }},
+          {{ address.dateMovedIn }}
+          <b-button
+            @click="removeAddress(index)"
+            variant="danger"
+            size="sm"
+          >
+            Remove
+          </b-button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- prettier-ignore -->
+    <b-button
+      @click="submitForm"
+      class="mt-4"
+      >Submit</b-button
+    >
   </div>
 </template>
 
