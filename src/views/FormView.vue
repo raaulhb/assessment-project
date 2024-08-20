@@ -3,6 +3,7 @@ import Vue from "vue";
 import FormComponent from "@/components/form.vue";
 import TextComponent from "@/components/text.vue";
 import SubmitComponent from "@/components/submit.vue";
+import AddressInputComponent from "@/components/AddressInput.vue";
 
 export default Vue.extend({
   name: "FormView",
@@ -10,6 +11,7 @@ export default Vue.extend({
     FormComponent,
     TextComponent,
     SubmitComponent,
+    AddressInputComponent,
   },
   data() {
     return {
@@ -18,12 +20,13 @@ export default Vue.extend({
   },
   created() {
     // TODO: Load user data here and set userName
+    console.log("AddressInput component created");
   },
 });
 </script>
+
 <template>
   <div class="container my-4">
-    <!-- Render the form with title, subtitle, and address history input slots -->
     <FormComponent>
       <!-- Title Slot -->
       <template v-slot:title>
@@ -43,7 +46,10 @@ export default Vue.extend({
         />
       </template>
 
-      <!-- TODO: Address history form fields go here -->
+      <!-- Address History Fields -->
+      <template v-slot:question><AddressInputComponent /></template>
+
+      <!-- TODO: Add logic for additional address inputs if required -->
 
       <!-- Submit Button Slot -->
       <template v-slot:submit>
