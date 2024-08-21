@@ -152,6 +152,11 @@ export default Vue.extend({
       <!-- prettier-ignore -->
       <b-form-datepicker
         v-model="dateMovedIn"
+        size="sm"
+        menu-class="w-100"
+        class="mb-2"
+        calendar-width="100%"
+        close-button
         required
       />
     </b-form-group>
