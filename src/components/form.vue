@@ -5,12 +5,38 @@ export default Vue.extend({
 });
 </script>
 <template>
-  <!-- TODO Use bootstrap classes to ensure the form reders appropriately on mobile, and each element has appropriate vertical spacing -->
-  <div>
-    <slot name="title"></slot>
-    <slot name="subtitle"></slot>
-    <slot name="question"></slot>
+  <div class="container mt-4">
+    <!-- Title Slot -->
+    <div class="mb-3">
+      <slot name="title"></slot>
+    </div>
 
-    <slot name="submit"></slot>
+    <!-- Subtitle Slot -->
+    <div class="mb-3">
+      <slot name="subtitle"></slot>
+    </div>
+
+    <!-- Question Slot -->
+    <div class="mb-4">
+      <slot name="question"></slot>
+    </div>
+
+    <!-- Submit Slot -->
+    <div class="mt-4">
+      <slot name="submit"></slot>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.container {
+  max-width: 600px;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+</style>

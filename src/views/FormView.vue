@@ -2,7 +2,6 @@
 import Vue from "vue";
 import FormComponent from "@/components/form.vue";
 import TextComponent from "@/components/text.vue";
-import SubmitComponent from "@/components/submit.vue";
 import AddressInputComponent from "@/components/AddressInput.vue";
 
 export default Vue.extend({
@@ -10,16 +9,16 @@ export default Vue.extend({
   components: {
     FormComponent,
     TextComponent,
-    SubmitComponent,
     AddressInputComponent,
   },
   data() {
     return {
-      userName: "", // TODO: This should be fetched from Vuex or props
+      userName: null,
     };
   },
   created() {
-    // TODO: Load user data here and set userName
+    // Load the user from the Vuex store when the component is created
+    this.userName = this.$store.getters.getUser.firstName;
   },
 });
 </script>
@@ -49,11 +48,6 @@ export default Vue.extend({
       <template v-slot:question><AddressInputComponent /></template>
 
       <!-- TODO: Add logic for additional address inputs if required -->
-
-      <!-- Submit Button Slot -->
-      <template v-slot:submit>
-        <SubmitComponent />
-      </template>
     </FormComponent>
   </div>
 </template>

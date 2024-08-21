@@ -4,9 +4,36 @@ export default Vue.extend({
   name: "App",
 });
 </script>
+
 <template>
-  <!-- TODO provide a responsive container for all views so the form renders on mobile and desktop appropriately -->
-  <div id="app">
-    <router-view :key="$route.path" />
+  <!--prettier-ignore-->
+  <div
+    id="app"
+    class="app-container"
+  >
+    <!-- Create a responsive container -->
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+          <!-- Place the router-view inside the responsive column -->
+          <router-view :key="$route.path" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.app-container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  min-height: 100vh; /* Ensure it covers the full height of the screen */
+}
+
+@media (max-width: 576px) {
+  .app-container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+</style>

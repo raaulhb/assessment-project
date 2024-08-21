@@ -1,6 +1,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { BFormInput, BFormGroup, BFormDatepicker } from "bootstrap-vue";
+import SubmitComponent from "@/components/submit.vue";
+
 import axios from "axios";
 
 export default Vue.extend({
@@ -9,6 +11,7 @@ export default Vue.extend({
     BFormInput,
     BFormGroup,
     BFormDatepicker,
+    SubmitComponent,
   },
   data() {
     return {
@@ -27,11 +30,11 @@ export default Vue.extend({
   methods: {
     async fetchPostcodeSuggestions() {
       if (this.postcode.length < 3) {
-        this.suggestions = []; // Clear suggestions if postcode length is less than 3
+        this.suggestions = [];
         return;
       }
 
-      this.isFetching = true; // Set fetching state to true
+      this.isFetching = true;
       try {
         const response = await axios.get(
           `https://api.postcodes.io/postcodes/${this.postcode}/autocomplete`
@@ -78,38 +81,34 @@ export default Vue.extend({
     removeAddress(index: number) {
       this.addresses.splice(index, 1);
     },
-    calculateAddressCoverage(): boolean {
-      if (this.addresses.length === 0) return false;
-
-      const threeYearsAgo = new Date();
-      threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
-
-      // Sort addresses by dateMovedIn in descending order
-      const sortedAddresses = this.addresses
-        .map((addr) => new Date(addr.dateMovedIn))
-        .sort((a, b) => b.getTime() - a.getTime());
-
-      const earliestDate = sortedAddresses[sortedAddresses.length - 1];
-
-      return earliestDate <= threeYearsAgo;
-    },
-    submitForm() {
-      if (this.calculateAddressCoverage()) {
-        // Proceed with form submission
-        console.log("Form is valid. Proceeding with submission.");
-        // Implement form submission logic here
-      } else {
-        alert(
-          "Please ensure you have provided address history covering at least 3 years."
-        );
-      }
-    },
   },
 });
 </script>
 
 <template>
   <div class="address-input mb-4">
+    <!-- Display added addresses with Remove button -->
+    <div v-if="addresses.length">
+      <h5>Address History</h5>
+      <ul>
+        <!-- prettier-ignore -->
+        <li
+          v-for="(address, index) in addresses"
+          :key="index"
+        >
+          Address Line 1: {{ address.addressLine1 }},
+          Postcode: {{ address.postcode }},
+          Date Moved In: {{ address.dateMovedIn }}
+          <b-button
+            @click="removeAddress(index)"
+            variant="danger"
+            size="sm"
+          >
+            Remove
+          </b-button>
+        </li>
+      </ul>
+    </div>
     <!-- Address Entry -->
     <!-- prettier-ignore -->
     <b-form-group label="Address Line 1">
@@ -135,7 +134,7 @@ export default Vue.extend({
           v-for="(suggestion, index) in suggestions"
           :key="index"
           @click="selectPostcode(suggestion)"
-          class="cursor-pointer"
+          class="dropdown-item"
         >
           {{ suggestion }}
         </b-list-group-item>
@@ -150,36 +149,18 @@ export default Vue.extend({
       />
     </b-form-group>
 
-    <b-button @click="addAddress">Add Address</b-button>
-
-    <!-- Display added addresses with Remove button -->
-    <div v-if="addresses.length">
-      <h5>Address History</h5>
-      <ul>
-        <!-- prettier-ignore -->
-        <li
-          v-for="(address, index) in addresses"
-          :key="index"
-        >
-          {{ address.addressLine1 }}, {{ address.postcode }},
-          {{ address.dateMovedIn }}
-          <b-button
-            @click="removeAddress(index)"
-            variant="danger"
-            size="sm"
-          >
-            Remove
-          </b-button>
-        </li>
-      </ul>
+    <div class="button-container">
+      <!-- prettier-ignore -->
+      <b-button
+        @click="addAddress"
+        class="mt-4"
+        >Add Address</b-button
+      >
+      <!-- prettier-ignore -->
+      <SubmitComponent
+        class="mt-4"
+        :addresses="addresses" />
     </div>
-
-    <!-- prettier-ignore -->
-    <b-button
-      @click="submitForm"
-      class="mt-4"
-      >Submit</b-button
-    >
   </div>
 </template>
 
@@ -188,7 +169,7 @@ export default Vue.extend({
   max-width: 500px;
 }
 
-.cursor-pointer {
+.dropdown-item {
   cursor: pointer;
 }
 </style>
