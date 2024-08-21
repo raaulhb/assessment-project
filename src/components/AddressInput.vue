@@ -1,8 +1,15 @@
 <script lang="ts">
 import Vue from "vue";
-import { BFormInput, BFormGroup, BFormDatepicker } from "bootstrap-vue";
+import {
+  BFormInput,
+  BFormGroup,
+  BFormDatepicker,
+  BCard,
+  BListGroup,
+  BListGroupItem,
+  BButton,
+} from "bootstrap-vue";
 import SubmitComponent from "@/components/submit.vue";
-
 import axios from "axios";
 
 export default Vue.extend({
@@ -11,6 +18,10 @@ export default Vue.extend({
     BFormInput,
     BFormGroup,
     BFormDatepicker,
+    BCard,
+    BListGroup,
+    BListGroupItem,
+    BButton,
     SubmitComponent,
   },
   data() {
@@ -79,46 +90,42 @@ export default Vue.extend({
 </script>
 
 <template>
-  <div class="address-input mb-4">
-    <!-- Display added addresses with Remove button -->
-    <template>
-      <div v-if="addresses.length">
-        <!--prettier-ignore-->
-        <b-card
-          title="Address History"
-          class="mb-4"
+  <div class="p-3">
+    <!-- Address History -->
+    <!--prettier-ignore-->
+    <b-card
+      v-if="addresses.length"
+      class="mb-4"
+      title="Address History"
+    >
+      <b-list-group>
+        <b-list-group-item
+          v-for="(address, index) in addresses"
+          :key="index"
+          class="d-flex justify-content-between align-items-center"
         >
-          <b-list-group>
-            <b-list-group-item
-              v-for="(address, index) in addresses"
-              :key="index"
-              class="d-flex justify-content-between align-items-center"
-            >
-              <div>
-                <div>
-                  <strong>Address Line 1:</strong> {{ address.addressLine1 }}
-                </div>
-                <div><strong>Postcode:</strong> {{ address.postcode }}</div>
-                <div>
-                  <strong>Date Moved In:</strong> {{ address.dateMovedIn }}
-                </div>
-              </div>
-              <b-button
-                @click="removeAddress(index)"
-                variant="danger"
-                size="sm"
-                class="ml-2"
-              >
-                Remove
-              </b-button>
-            </b-list-group-item>
-          </b-list-group>
-        </b-card>
-      </div>
-    </template>
+          <div>
+            <div>
+              <strong>Address Line 1:</strong> {{ address.addressLine1 }}
+            </div>
+            <div><strong>Postcode:</strong> {{ address.postcode }}</div>
+            <div><strong>Date Moved In:</strong> {{ address.dateMovedIn }}</div>
+          </div>
+           <!--prettier-ignore-->
+          <b-button
+            @click="removeAddress(index)"
+            variant="danger"
+            size="sm"
+          >
+            Remove
+          </b-button>
+        </b-list-group-item>
+      </b-list-group>
+    </b-card>
+
     <!-- Address Entry -->
-    <!-- prettier-ignore -->
     <b-form-group label="Address Line 1">
+      <!--prettier-ignore-->
       <b-form-input
         v-model="addressLine1"
         required
@@ -132,7 +139,7 @@ export default Vue.extend({
         required
       />
       <!-- Suggestions Dropdown -->
-      <!-- prettier-ignore -->
+      <!--prettier-ignore-->
       <b-list-group
         v-if="suggestions.length"
         class="mt-2"
@@ -141,7 +148,7 @@ export default Vue.extend({
           v-for="(suggestion, index) in suggestions"
           :key="index"
           @click="selectPostcode(suggestion)"
-          class="dropdown-item"
+          class="cursor-pointer"
         >
           {{ suggestion }}
         </b-list-group-item>
@@ -149,11 +156,9 @@ export default Vue.extend({
     </b-form-group>
 
     <b-form-group label="Date Moved In">
-      <!-- prettier-ignore -->
       <b-form-datepicker
         v-model="dateMovedIn"
         size="sm"
-        menu-class="w-100"
         class="mb-2"
         calendar-width="100%"
         close-button
@@ -161,27 +166,19 @@ export default Vue.extend({
       />
     </b-form-group>
 
-    <div class="button-container">
-      <!-- prettier-ignore -->
+    <div class="mt-4">
+      <!--prettier-ignore-->
       <b-button
         @click="addAddress"
-        class="mt-4"
-        >Add Address</b-button
+        variant="primary"
       >
-      <!-- prettier-ignore -->
+        Add Address
+      </b-button>
+      <!--prettier-ignore-->
       <SubmitComponent
         class="mt-4"
-        :addresses="addresses" />
+        :addresses="addresses"
+      />
     </div>
   </div>
 </template>
-
-<style scoped>
-.address-input {
-  max-width: 500px;
-}
-
-.dropdown-item {
-  cursor: pointer;
-}
-</style>
