@@ -53,11 +53,9 @@ export default Vue.extend({
         if (Array.isArray(response.data.result)) {
           this.suggestions = response.data.result;
         } else {
-          console.error("Unexpected API response format:", response.data);
           this.suggestions = [];
         }
       } catch (error) {
-        console.error("Error fetching postcode suggestions:", error);
         this.suggestions = [];
       } finally {
         this.isFetching = false; // Reset fetching state
