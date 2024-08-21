@@ -81,27 +81,41 @@ export default Vue.extend({
 <template>
   <div class="address-input mb-4">
     <!-- Display added addresses with Remove button -->
-    <div v-if="addresses.length">
-      <h5>Address History</h5>
-      <ul>
-        <!-- prettier-ignore -->
-        <li
-          v-for="(address, index) in addresses"
-          :key="index"
+    <template>
+      <div v-if="addresses.length">
+        <!--prettier-ignore-->
+        <b-card
+          title="Address History"
+          class="mb-4"
         >
-          Address Line 1: {{ address.addressLine1 }},
-          Postcode: {{ address.postcode }},
-          Date Moved In: {{ address.dateMovedIn }}
-          <b-button
-            @click="removeAddress(index)"
-            variant="danger"
-            size="sm"
-          >
-            Remove
-          </b-button>
-        </li>
-      </ul>
-    </div>
+          <b-list-group>
+            <b-list-group-item
+              v-for="(address, index) in addresses"
+              :key="index"
+              class="d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <div>
+                  <strong>Address Line 1:</strong> {{ address.addressLine1 }}
+                </div>
+                <div><strong>Postcode:</strong> {{ address.postcode }}</div>
+                <div>
+                  <strong>Date Moved In:</strong> {{ address.dateMovedIn }}
+                </div>
+              </div>
+              <b-button
+                @click="removeAddress(index)"
+                variant="danger"
+                size="sm"
+                class="ml-2"
+              >
+                Remove
+              </b-button>
+            </b-list-group-item>
+          </b-list-group>
+        </b-card>
+      </div>
+    </template>
     <!-- Address Entry -->
     <!-- prettier-ignore -->
     <b-form-group label="Address Line 1">
