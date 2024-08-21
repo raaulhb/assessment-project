@@ -39,18 +39,12 @@ export default Vue.extend({
         const response = await axios.get(
           `https://api.postcodes.io/postcodes/${this.postcode}/autocomplete`
         );
-        // Log the full response
-        console.log("API Response:", response);
-
-        // Check if response.data.result is an array
         if (Array.isArray(response.data.result)) {
           this.suggestions = response.data.result;
         } else {
           console.error("Unexpected API response format:", response.data);
           this.suggestions = [];
         }
-
-        console.log("Postcode suggestions:", this.suggestions);
       } catch (error) {
         console.error("Error fetching postcode suggestions:", error);
         this.suggestions = [];
@@ -60,7 +54,6 @@ export default Vue.extend({
     },
     selectPostcode(postcode: string) {
       this.postcode = postcode;
-      console.log("Selected postcode:", postcode);
       this.suggestions = []; // Clear suggestions after selection
     },
     addAddress() {

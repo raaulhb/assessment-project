@@ -14,40 +14,55 @@ export default Vue.extend({
   data() {
     return {
       userName: null,
+      userExists: true,
     };
   },
   created() {
     // Load the user from the Vuex store when the component is created
-    this.userName = this.$store.getters.getUser.firstName;
+    const user = this.$store.getters.getUser;
+    if (user && user.firstName) {
+      this.userName = user.firstName;
+    } else {
+      this.userExists = false;
+    }
   },
 });
 </script>
 
 <template>
   <div class="container my-4">
-    <FormComponent>
-      <!-- Title Slot -->
-      <template v-slot:title>
-        <TextComponent
-          type="h1"
-          :text="`Welcome Back, ${userName}`"
-          classes="mb-3"
-        />
-      </template>
+    <div v-if="userExists">
+      <FormComponent>
+        <!-- Title Slot -->
+        <template v-slot:title>
+          <TextComponent
+            type="h1"
+            :text="`Welcome Back, ${userName}`"
+            classes="mb-3"
+          />
+        </template>
 
-      <!-- Subtitle Slot -->
-      <template v-slot:subtitle>
-        <TextComponent
-          type="h5"
-          text="Please provide your address history for the past 3 years"
-          classes="mb-4"
-        />
-      </template>
+        <!-- Subtitle Slot -->
+        <template v-slot:subtitle>
+          <TextComponent
+            type="h5"
+            text="Please provide your address history for the past 3 years"
+            classes="mb-4"
+          />
+        </template>
 
-      <!-- Address History Fields -->
-      <template v-slot:question><AddressInputComponent /></template>
+        <!-- Address History Fields -->
+        <template v-slot:question><AddressInputComponent /></template>
 
-      <!-- TODO: Add logic for additional address inputs if required -->
-    </FormComponent>
+        <!-- TODO: Add logic for additional address inputs if required -->
+      </FormComponent>
+    </div>
+    <div v-else>
+      <TextComponent
+        type="h1"
+        text="User not found. Please contact support."
+        classes="text-danger"
+      />
+    </div>
   </div>
 </template>

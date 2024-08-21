@@ -21,6 +21,10 @@ export default Vue.extend({
       <slot name="question"></slot>
     </div>
 
+    <div class="mb-4">
+      <slot name="not found"></slot>
+    </div>
+
     <!-- Submit Slot -->
     <div class="mt-4">
       <slot name="submit"></slot>
